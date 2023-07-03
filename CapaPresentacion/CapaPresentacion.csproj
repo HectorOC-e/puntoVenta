@@ -46,20 +46,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CP_Clientes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CP_Clientes.Designer.cs">
+      <DependentUpon>CP_Clientes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CP_Facturas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CP_Facturas.Designer.cs">
+      <DependentUpon>CP_Facturas.cs</DependentUpon>
+    </Compile>
     <Compile Include="CP_Productos.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="CP_Productos.Designer.cs">
       <DependentUpon>CP_Productos.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="CP_Clientes.resx">
+      <DependentUpon>CP_Clientes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CP_Facturas.resx">
+      <DependentUpon>CP_Facturas.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CP_Productos.resx">
       <DependentUpon>CP_Productos.cs</DependentUpon>
     </EmbeddedResource>

@@ -1,33 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data.SqlClient;
 
 namespace CapaDatos
 {
     public class CD_Conexion
     {
-        //private SqlConnection Conexion = new SqlConnection("Server=(local);Database=puntoVenta;Integrated Security=true");
-        private SqlConnection Conexion = new SqlConnection("Server=DESKTOP-O5L8NSD\\IHECAST;Database=puntoVenta;Integrated Security=true");
+        private static readonly CD_Conexion instancia = new CD_Conexion();
+        private SqlConnection conexion;
+
+        private CD_Conexion()
+        {
+            // Configurar la cadena de conexión a la base de datos
+            string connectionString = "Server=DESKTOP-O5L8NSD\\IHECAST;Database=puntoVenta;Integrated Security=true";
+            conexion = new SqlConnection(connectionString);
+        }
+
+        public static CD_Conexion Instancia
+        {
+            get { return instancia; }
+        }
 
         public SqlConnection AbrirConexion()
         {
-            if (Conexion.State == ConnectionState.Closed) { 
-                Conexion.Open();
+            if (conexion.State == System.Data.ConnectionState.Closed)
+            {
+                conexion.Open();
             }
-            return Conexion;
+            return conexion;
         }
 
         public SqlConnection CerrarConexion()
         {
-            if (Conexion.State == ConnectionState.Open)
+            if (conexion.State == System.Data.ConnectionState.Open)
             {
-                Conexion.Close();
+                conexion.Close();
             }
-            return Conexion;
+            return conexion;
         }
     }
 }
