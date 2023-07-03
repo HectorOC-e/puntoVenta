@@ -71,6 +71,7 @@ VALUES
     ('Impuesto 15%', 0.15),
     ('Impuesto 12%', 0.12),
 	('Impuesto 18%', 0.18)
+GO
 
 -- Insertar productos
 INSERT INTO Productos (Codigo, Descripcion, Precio, ImpuestoId)
@@ -96,31 +97,16 @@ GO
 -- Insertar facturas
 INSERT INTO Facturas (ClienteId, FechaFactura, Total, Estado)
 VALUES
-    (1, '2023-07-01', 0, 'Pendiente');
+    (1, '2023-07-01', 0, 'Vigente');
+GO
 
--- Insertar detalles de factura para la primera factura
-DECLARE @FacturaId1 INT;
-SET @FacturaId1 = SCOPE_IDENTITY();
-
-INSERT INTO DetalleFactura (FacturaId, ProductoId, Cantidad, PrecioUnitario, Total)
-VALUES
-    (@FacturaId1, 1, 2, (SELECT Precio * (1 + Impuestos.Porcentaje) FROM Productos INNER JOIN Impuestos ON Productos.ImpuestoId = Impuestos.Id WHERE Productos.Id = 1), 0),
-    (@FacturaId1, 2, 1, (SELECT Precio * (1 + Impuestos.Porcentaje) FROM Productos INNER JOIN Impuestos ON Productos.ImpuestoId = Impuestos.Id WHERE Productos.Id = 2), 0);
 
 -- Insertar la segunda factura
 INSERT INTO Facturas (ClienteId, FechaFactura, Total, Estado)
 VALUES
-    (2, '2023-07-01', 0, 'Pendiente');
-
--- Insertar detalles de factura para la segunda factura
-DECLARE @FacturaId2 INT;
-SET @FacturaId2 = SCOPE_IDENTITY();
-
-INSERT INTO DetalleFactura (FacturaId, ProductoId, Cantidad, PrecioUnitario, Total)
-VALUES
-    (@FacturaId2, 3, 3, (SELECT Precio * (1 + Impuestos.Porcentaje) FROM Productos INNER JOIN Impuestos ON Productos.ImpuestoId = Impuestos.Id WHERE Productos.Id = 3), 0),
-    (@FacturaId2, 4, 2, (SELECT Precio * (1 + Impuestos.Porcentaje) FROM Productos INNER JOIN Impuestos ON Productos.ImpuestoId = Impuestos.Id WHERE Productos.Id = 4), 0);
+    (2, '2023-07-01', 0, 'Vigente');
 GO
+
 
 
 
@@ -248,9 +234,11 @@ CREATE PROCEDURE ObtenerFacturaPorId
     @FacturaId INT
 AS
 BEGIN
-    SELECT * FROM Facturas WHERE Id = @FacturaId
+    SELECT FA.FechaFactura, CLI.Nombre, FA.Estado, FA.Total FROM Facturas FA
+	INNER JOIN Clientes CLI ON CLI.Id = FA.ClienteId  WHERE FA.Id = @FacturaId
 END
 GO
+
 
 -- Insertar una nueva factura
 CREATE PROCEDURE InsertarFactura
@@ -352,8 +340,9 @@ CREATE PROCEDURE ObtenerDetallesFactura
     @FacturaId INT
 AS
 BEGIN
-    SELECT *
-    FROM DetalleFactura
+    SELECT DF.Id, P.Codigo, P.Descripcion, P.Precio, DF.PrecioUnitario, DF.Cantidad, DF.Total 
+    FROM DetalleFactura DF
+	INNER JOIN Productos P ON P.Id = DF.ProductoId
     WHERE FacturaId = @FacturaId
 END
 GO

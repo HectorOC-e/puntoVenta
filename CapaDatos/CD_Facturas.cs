@@ -33,6 +33,8 @@ namespace CapaDatos
             }
         }
 
+        
+
         public DataTable MostrarFacturaPorId(int facturaId)
         {
             
